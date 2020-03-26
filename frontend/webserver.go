@@ -9,7 +9,7 @@ import (
 func webHandlerWhois(w http.ResponseWriter, r *http.Request) {
 	var target string = r.URL.Path[len("/whois/"):]
 
-	templateHeader(w, r, "iEdon-Net Looking Glass: whois "+html.EscapeString(target))
+	templateHeader(w, r, PAGE_TITLE_PREFIX+"whois "+html.EscapeString(target))
 
 	w.Write([]byte("<h2>whois " + html.EscapeString(target) + "</h2>"))
 	smartWriter(w, whois(target))
@@ -31,7 +31,7 @@ func webBackendCommunicator(w http.ResponseWriter, r *http.Request, endpoint str
 		"traceroute":      urlCommands,
 	})[command]
 
-	templateHeader(w, r, "iEdon-Net Looking Glass: "+html.EscapeString(endpoint+" "+command))
+	templateHeader(w, r, PAGE_TITLE_PREFIX+html.EscapeString(endpoint+" "+command))
 
 	var servers []string = strings.Split(split[2], "+")
 
@@ -58,7 +58,7 @@ func webHandlerBGPMap(w http.ResponseWriter, r *http.Request, endpoint string, c
 		"route_where_bgpmap": "show route where net ~ [ " + urlCommands + " ] all",
 	})[command]
 
-	templateHeader(w, r, "iEdon-Net Looking Glass: "+html.EscapeString(endpoint+" "+command))
+	templateHeader(w, r, PAGE_TITLE_PREFIX+html.EscapeString(endpoint+" "+command))
 
 	var servers []string = strings.Split(split[2], "+")
 
@@ -66,14 +66,14 @@ func webHandlerBGPMap(w http.ResponseWriter, r *http.Request, endpoint string, c
 	w.Write([]byte(`
 	<div id="#map"></div>
 	<script>
-	var viz = new Viz();
-	viz.renderSVGElement(` + "`" + birdRouteToGraphviz(servers, responses, urlCommands) + "`" + `)
-	.then(function(element) {
-		document.getElementById("#map").appendChild(element);
-	})
-	.catch(error => {
-		document.getElementById("#map").appendChild("<pre>"+error+"</pre>")
-	});
+		const viz = new Viz();
+		viz.renderSVGElement(` + "`" + birdRouteToGraphviz(servers, responses, urlCommands) + "`" + `)
+		.then(function(element) {
+			document.getElementById("#map").appendChild(element);
+		})
+		.catch(error => {
+			document.getElementById("#map").appendChild("<pre>"+error+"</pre>")
+		});
 	</script>`))
 
 	templateFooter(w)

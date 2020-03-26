@@ -7,6 +7,15 @@ import (
 	"strings"
 )
 
+const NETWORK_NAME string = "iEdon-Net"
+const PAGE_TITLE_PREFIX string = NETWORK_NAME + " Looking Glass: "
+const LG_HOME_PAGE_URL string = "http://lg.iedon.dn42/"
+const HOME_PAGE_URL string = "http://iedon.dn42/"
+const FOOTER_HTML string = `
+	<p>Bringing to you with ❤ by iEdon.</p>
+	<p>Thanks for using iEdon-Net services.&nbsp;&nbsp;Have questions? <a href="mailto:iedonami@gmail.com">Contact me</a></p>
+`
+
 var settingServers []string
 var settingServersDomain string
 var settingServersPort int

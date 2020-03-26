@@ -148,7 +148,7 @@ func templateHeader(w http.ResponseWriter, r *http.Request, title string) {
     <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
-        <a class="navbar-brand" href="/">iEdon-Net</a>
+        <a class="navbar-brand" href="/">` + NETWORK_NAME + `</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -177,15 +177,13 @@ func templateHeader(w http.ResponseWriter, r *http.Request, title string) {
 func templateFooter(w http.ResponseWriter) {
 	w.Write([]byte(`
 		</div>
-		<div id="graphviz" class="overflow-auto"></div>
 		<footer class="footer bd-footer text-muted">
 			<div class="container-fluid p-3 p-md-5">
 				<ul class="bd-footer-links">
-					<li><a href="http://lg.iedon.dn42/">Looking Glass</a></li>
-					<li><a href="http://iedon.dn42/" target="_blank">iEdon.DN42</a></li>
+					<li><a href="` + LG_HOME_PAGE_URL + `">Looking Glass</a></li>
+					<li><a href="` + HOME_PAGE_URL + `" target="_blank">` + NETWORK_NAME + `</a></li>
 				</ul>
-				<p>Bringing to you with ❤ by iEdon.</p>
-				<p>Thanks for using iEdon-Net services.&nbsp;&nbsp;<a href="https://github.com/xddxdd/bird-lg-go" target="_blank">Birdlg-Go</a> by LanTian and iEdon.</p>
+				` + FOOTER_HTML + `
 			</div>
 		</footer> 
     </body>
@@ -295,11 +293,11 @@ func summaryTable(w http.ResponseWriter, isIPv6 bool, data string, serverName st
 			// Draw the other cells
 			for i := 1; i < 6; i++ {
 				if i == 3 {
-					if row[i] == "up" {
+					if strings.ToLower(row[i]) == "up" {
 						w.Write([]byte("<td><span class=\"badge badge-success\">" + row[i] + "</span></td>"))
-					} else if row[i] == "start" && strings.ToLower(row[5]) == "passive" {
+					} else if strings.ToLower(row[i]) == "start" && strings.ToLower(row[5]) == "passive" {
 						w.Write([]byte("<td><span class=\"badge badge-info\">" + row[i] + "</span></td>"))
-					} else if row[i] == "down" {
+					} else if strings.ToLower(row[i]) == "down" {
 						w.Write([]byte("<td><span class=\"badge badge-secondary\">" + row[i] + "</span></td>"))
 					} else {
 						w.Write([]byte("<td><span class=\"badge badge-danger\">" + row[i] + "</span></td>"))
