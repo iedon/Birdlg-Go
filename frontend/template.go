@@ -297,7 +297,7 @@ func summaryTable(w http.ResponseWriter, isIPv6 bool, data string, serverName st
 				if i == 3 {
 					if row[i] == "up" {
 						w.Write([]byte("<td><span class=\"badge badge-success\">" + row[i] + "</span></td>"))
-					} else if row[i] == "start" && row[5] == "Passive" {
+					} else if row[i] == "start" && strings.ToLower(row[5]) == "passive" {
 						w.Write([]byte("<td><span class=\"badge badge-info\">" + row[i] + "</span></td>"))
 					} else if row[i] == "down" {
 						w.Write([]byte("<td><span class=\"badge badge-secondary\">" + row[i] + "</span></td>"))
