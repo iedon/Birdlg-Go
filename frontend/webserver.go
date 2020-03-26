@@ -9,7 +9,7 @@ import (
 func webHandlerWhois(w http.ResponseWriter, r *http.Request) {
 	var target string = r.URL.Path[len("/whois/"):]
 
-	templateHeader(w, r, "iEdon-Net Looking Glass - whois "+html.EscapeString(target))
+	templateHeader(w, r, "iEdon-Net Looking Glass: whois "+html.EscapeString(target))
 
 	w.Write([]byte("<h2>whois " + html.EscapeString(target) + "</h2>"))
 	smartWriter(w, whois(target))
@@ -31,7 +31,7 @@ func webBackendCommunicator(w http.ResponseWriter, r *http.Request, endpoint str
 		"traceroute":      urlCommands,
 	})[command]
 
-	templateHeader(w, r, "Bird-lg Go - "+html.EscapeString(endpoint+" "+command))
+	templateHeader(w, r, "iEdon-Net Looking Glass: "+html.EscapeString(endpoint+" "+command))
 
 	var servers []string = strings.Split(split[2], "+")
 
@@ -58,7 +58,7 @@ func webHandlerBGPMap(w http.ResponseWriter, r *http.Request, endpoint string, c
 		"route_where_bgpmap": "show route where net ~ [ " + urlCommands + " ] all",
 	})[command]
 
-	templateHeader(w, r, "Bird-lg Go - "+html.EscapeString(endpoint+" "+command))
+	templateHeader(w, r, "iEdon-Net Looking Glass: "+html.EscapeString(endpoint+" "+command))
 
 	var servers []string = strings.Split(split[2], "+")
 
