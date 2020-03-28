@@ -16,44 +16,45 @@ const FOOTER_HTML string = `
 	<p>Thanks for using iEdon-Net services.&nbsp;&nbsp;Have questions? <a href="mailto:iedonami@gmail.com">Contact me</a></p>
 `
 
-var settingServers []string
-var settingServersDomain string
-var settingServersPort int
-var settingWhoisServer string
-var settingListen string
+type settingType struct {
+	servers     []string
+	domain      string
+	proxyPort   int
+	whoisServer string
+	listen      string
+}
+
+var setting settingType
 
 func main() {
-	serversDefault := ""
-	domainDefault := ""
-	proxyPortDefault := 8000
-	whoisDefault := "whois.verisign-grs.com"
-	listenDefault := ":5000"
+	var settingDefault = settingType{
+		[]string{""}, "", 8000, "whois.verisign-grs.com", ":5000",
+	}
 
 	if serversEnv := os.Getenv("BIRDLG_SERVERS"); serversEnv != "" {
-		serversDefault = serversEnv
+		settingDefault.servers = strings.Split(serversEnv, ",")
 	}
 	if domainEnv := os.Getenv("BIRDLG_DOMAIN"); domainEnv != "" {
-		domainDefault = domainEnv
+		settingDefault.domain = domainEnv
 	}
 	if proxyPortEnv := os.Getenv("BIRDLG_PROXY_PORT"); proxyPortEnv != "" {
 		var err error
-		proxyPortDefault, err = strconv.Atoi(proxyPortEnv)
-		if err != nil {
+		if settingDefault.proxyPort, err = strconv.Atoi(proxyPortEnv); err != nil {
 			panic(err)
 		}
 	}
 	if whoisEnv := os.Getenv("BIRDLG_WHOIS"); whoisEnv != "" {
-		whoisDefault = whoisEnv
+		settingDefault.whoisServer = whoisEnv
 	}
 	if listenEnv := os.Getenv("BIRDLG_LISTEN"); listenEnv != "" {
-		listenDefault = listenEnv
+		settingDefault.listen = listenEnv
 	}
 
-	serversPtr := flag.String("servers", serversDefault, "server name prefixes, separated by comma")
-	domainPtr := flag.String("domain", domainDefault, "server name domain suffixes")
-	proxyPortPtr := flag.Int("proxy-port", proxyPortDefault, "port bird-lgproxy is running on")
-	whoisPtr := flag.String("whois", whoisDefault, "whois server for queries")
-	listenPtr := flag.String("listen", listenDefault, "address bird-lg is listening on")
+	serversPtr := flag.String("servers", strings.Join(settingDefault.servers, ","), "server name prefixes, separated by comma")
+	domainPtr := flag.String("domain", settingDefault.domain, "server name domain suffixes")
+	proxyPortPtr := flag.Int("proxy-port", settingDefault.proxyPort, "port bird-lgproxy is running on")
+	whoisPtr := flag.String("whois", settingDefault.whoisServer, "whois server for queries")
+	listenPtr := flag.String("listen", settingDefault.listen, "address bird-lg is listening on")
 	flag.Parse()
 
 	if *serversPtr == "" {
@@ -64,11 +65,13 @@ func main() {
 		panic("no base domain set")
 	}
 
-	settingServers = strings.Split(*serversPtr, ",")
-	settingServersDomain = *domainPtr
-	settingServersPort = *proxyPortPtr
-	settingWhoisServer = *whoisPtr
-	settingListen = *listenPtr
+	setting = settingType{
+		strings.Split(*serversPtr, ","),
+		*domainPtr,
+		*proxyPortPtr,
+		*whoisPtr,
+		*listenPtr,
+	}
 
 	webServerStart()
 }
